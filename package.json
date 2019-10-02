@@ -1,0 +1,16 @@
+{
+"name": "@rudein/bs-searchable-multiselect",
+"version": "1.0.0",
+"description": "Responsive multiselect with search bar built upon bootstrap",
+"license": "MIT",
+"repository": "gr8prnm8/bs-searchable-multiselect",
+"main": "sms.js",
+"keywords": [
+    "rudein",
+    "bootstrap",
+    "form",
+    "select",
+    "multiple",
+    "multiselect"
+]
+}
