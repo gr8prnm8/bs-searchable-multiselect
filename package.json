@@ -5,6 +5,11 @@
 "license": "MIT",
 "repository": "gr8prnm8/bs-searchable-multiselect",
 "main": "sms.js",
+"dependencies": {
+    "bootstrap": "^4.0.0",
+    "jquery": "^3.0.0"
+
+},
 "keywords": [
     "rudein",
     "bootstrap",
