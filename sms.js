@@ -1,5 +1,28 @@
 const default_template_string =
-    '<div class="border p-2 col-6 sms-searchable-multiselect">\n' +
+    '<div class="border p-2 sms-searchable-multiselect">\n' +
+    '    <input type="text" class="form-control sms-search-bar">\n' +
+    '    <div class="container border rounded mt-2">\n' +
+    '        <div class="row">\n' +
+    '            <div class="col border-right p-0 overflow-auto sms-list-container">\n' +
+    '                <ul class="list-group list-group-flush sms-not-chosen-list">\n' +
+    '                    <li class="list-group-item border-bottom sms-default-option" style="display: none">\n' +
+    '                        default not chosen option\n' +
+    '                    </li>\n' +
+    '                </ul>\n' +
+    '            </div>\n' +
+    '            <div class="col p-0 overflow-auto sms-list-container">\n' +
+    '                <ul class="list-group list-group-flush overflow-auto sms-chosen-list">\n' +
+    '                    <li class="list-group-item border-bottom sms-default-option" style="display: none">\n' +
+    '                        default chosen option\n' +
+    '                    </li>\n' +
+    '                </ul>\n' +
+    '            </div>\n' +
+    '        </div>\n' +
+    '    </div>\n' +
+    '</div>';
+
+const dark_template_string =
+    '<div class="border p-2 sms-searchable-multiselect bg-dark">\n' +
     '    <input type="text" class="form-control sms-search-bar">\n' +
     '    <div class="container border rounded mt-2">\n' +
     '        <div class="row">\n' +
@@ -72,9 +95,20 @@ function replace_select_with_sms(select, template) {
 }
 
 function generate_all_sms() {
-    let template = $('<output>').append($.parseHTML(default_template_string)).children().first();
+    let template = $('<output>').append($.parseHTML(default_template_string)).children().first().clone();
+    let dark_template = $('<output>').append($.parseHTML(dark_template_string)).children().first().clone();
+    let custom_template = $('#sms-custom-template').children().first().clone();
+
     $('.sms-select').each(function () {
         replace_select_with_sms($(this), template);
+    });
+
+    $('.sms-select-dark').each(function () {
+        replace_select_with_sms($(this), dark_template);
+    });
+
+    $('.sms-select-custom').each(function () {
+        replace_select_with_sms($(this), custom_template);
     });
 }
 
@@ -148,4 +182,3 @@ $(document).ready(function () {
     connect_events();
 
 });
-
