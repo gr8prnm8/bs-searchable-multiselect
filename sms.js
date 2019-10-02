@@ -1,3 +1,28 @@
+const default_template_string =
+    '<div class="border p-2 col-6 sms-searchable-multiselect">\n' +
+    '    <input type="text" class="form-control sms-search-bar">\n' +
+    '    <div class="container border rounded mt-2">\n' +
+    '        <div class="row">\n' +
+    '            <div class="col border-right p-0 overflow-auto sms-list-container">\n' +
+    '                <ul class="list-group list-group-flush sms-not-chosen-list">\n' +
+    '                    <li class="list-group-item border-bottom sms-default-option" style="display: none">\n' +
+    '                        default not chosen option\n' +
+    '                    </li>\n' +
+    '                </ul>\n' +
+    '            </div>\n' +
+    '            <div class="col p-0 overflow-auto sms-list-container">\n' +
+    '                <ul class="list-group list-group-flush overflow-auto sms-chosen-list">\n' +
+    '                    <li class="list-group-item border-bottom sms-default-option" style="display: none">\n' +
+    '                        default chosen option\n' +
+    '                    </li>\n' +
+    '                </ul>\n' +
+    '            </div>\n' +
+    '        </div>\n' +
+    '    </div>\n' +
+    '</div>';
+
+
+
 function sort_ul(ul) {
     let items = ul.children();
     items.sort(function (a, b) {
@@ -47,7 +72,7 @@ function replace_select_with_sms(select, template) {
 }
 
 function generate_all_sms() {
-    let template = $('#sms-template').children().first();
+    let template = $('<output>').append($.parseHTML(default_template_string)).children().first();
     $('.sms-select').each(function () {
         replace_select_with_sms($(this), template);
     });
@@ -123,3 +148,4 @@ $(document).ready(function () {
     connect_events();
 
 });
+
