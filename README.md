@@ -8,9 +8,11 @@
  2. Run *./generate_templates.js*  
  3. Import *sms_templates.js* which was generated in last step  
  4. Import *sms.js*  
- 5. Add `class='sms-select'` to your `<select>` tag  
+ 5. Add `class='sms-select'` to your `<select>` tag.  
    
 **Done!**  
+
+ You can also add *sms-template-dark* to classes of your select, if you prefer darker colors.
 
 ## Using custom templates
 If you want to further customize your select, there are a few simple steps that you have to perform:
