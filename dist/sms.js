@@ -1,50 +1,4 @@
-const default_template_string =
-    '<div class="border p-2 sms-searchable-multiselect">\n' +
-    '    <input type="text" class="form-control sms-search-bar">\n' +
-    '    <div class="container border rounded mt-2">\n' +
-    '        <div class="row">\n' +
-    '            <div class="col border-right p-0 overflow-auto sms-list-container">\n' +
-    '                <ul class="list-group list-group-flush sms-not-chosen-list">\n' +
-    '                    <li class="list-group-item border-bottom sms-default-option" style="display: none">\n' +
-    '                        default not chosen option\n' +
-    '                    </li>\n' +
-    '                </ul>\n' +
-    '            </div>\n' +
-    '            <div class="col p-0 overflow-auto sms-list-container">\n' +
-    '                <ul class="list-group list-group-flush overflow-auto sms-chosen-list">\n' +
-    '                    <li class="list-group-item border-bottom sms-default-option" style="display: none">\n' +
-    '                        default chosen option\n' +
-    '                    </li>\n' +
-    '                </ul>\n' +
-    '            </div>\n' +
-    '        </div>\n' +
-    '    </div>\n' +
-    '</div>';
-
-const dark_template_string =
-    '<div class="border p-2 sms-searchable-multiselect bg-dark">\n' +
-    '    <input type="text" class="form-control sms-search-bar">\n' +
-    '    <div class="container border rounded mt-2">\n' +
-    '        <div class="row">\n' +
-    '            <div class="col border-right p-0 overflow-auto sms-list-container">\n' +
-    '                <ul class="list-group list-group-flush sms-not-chosen-list">\n' +
-    '                    <li class="list-group-item border-bottom sms-default-option" style="display: none">\n' +
-    '                        default not chosen option\n' +
-    '                    </li>\n' +
-    '                </ul>\n' +
-    '            </div>\n' +
-    '            <div class="col p-0 overflow-auto sms-list-container">\n' +
-    '                <ul class="list-group list-group-flush overflow-auto sms-chosen-list">\n' +
-    '                    <li class="list-group-item border-bottom sms-default-option" style="display: none">\n' +
-    '                        default chosen option\n' +
-    '                    </li>\n' +
-    '                </ul>\n' +
-    '            </div>\n' +
-    '        </div>\n' +
-    '    </div>\n' +
-    '</div>';
-
-
+const sms_template_prefix = 'sms-template';
 
 function sort_ul(ul) {
     let items = ul.children();
@@ -60,7 +14,6 @@ function sort_ul(ul) {
         ul.append(li); /* This removes li from the old spot and moves it */
     });
 }
-
 
 function generate_options(sms, sms_select) {
     let not_chosen_list = sms.find('.sms-not-chosen-list');
@@ -94,22 +47,47 @@ function replace_select_with_sms(select, template) {
     generate_options(sms, sms_select);
 }
 
-function generate_all_sms() {
-    let template = $('<output>').append($.parseHTML(default_template_string)).children().first().clone();
-    let dark_template = $('<output>').append($.parseHTML(dark_template_string)).children().first().clone();
-    let custom_template = $('#sms-custom-template').children().first().clone();
+function get_template_types(templates) {
+    let template_types = [];
 
-    $('.sms-select').each(function () {
-        replace_select_with_sms($(this), template);
+    templates.each(function () {
+        let classes = $(this).attr('class').split(/\s+/);
+
+        // filter only classes which corresponds to template types
+        classes = classes.filter(function (class_name) {
+            return class_name.startsWith(sms_template_prefix);
+        });
+
+        template_types = template_types.concat(classes);
     });
 
-    $('.sms-select-dark').each(function () {
-        replace_select_with_sms($(this), dark_template);
+    return template_types;
+}
+
+function generate_all_sms(templates_str) {
+    const templates = $('<output>').append($.parseHTML(templates_str));
+
+    const template_types = get_template_types(templates.children());
+
+    let selects = $('.sms-select');
+
+    // generate selects that have defined template
+    template_types.forEach(function (template_type) {
+        selects.each(function () {
+            if ($(this).hasClass(template_type)) {
+                replace_select_with_sms($(this), templates.find('.'.concat(template_type)));
+            }
+        });
+        // remove selects with this template type from list of selects
+        selects = selects.not('.'.concat(template_type));
     });
 
-    $('.sms-select-custom').each(function () {
-        replace_select_with_sms($(this), custom_template);
+    // generate selects that have no template selected
+    selects.each(function () {
+        replace_select_with_sms($(this), templates.find('.sms-template-default'));
     });
+
+
 }
 
 function choose_option(option) {
@@ -178,7 +156,12 @@ function connect_events() {
 
 $(document).ready(function () {
 
-    generate_all_sms();
-    connect_events();
-
+    if (typeof templates_str === 'undefined') {
+        console.warn('WARNING: There is no "templates_str" variable. You should create one by running ' +
+            './generate_templates.js and then include it on your page. You could also pass your own version of it. ' +
+            'For more information check: https://github.com/gr8prnm8/bs-searchable-multiselect');
+    } else {
+        generate_all_sms(templates_str);
+        connect_events();
+    }
 });
