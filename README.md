@@ -24,5 +24,7 @@ If you want to further customize your select, there are a few simple steps that 
 
 And that's all. *./generate_templates.js* updated *sms_templates.js* file, adding your new template to it.
 
+**NOTE**: 
+If you want to add more than one template, just put them all in one file, one after another.
   
 > Written with [StackEdit](https://stackedit.io/).
