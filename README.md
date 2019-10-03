@@ -3,8 +3,11 @@
 ## How to use
 
  1. Import *bootstrap* and *jQuery*
- 2. Import *sms.js*
- 3. Add `class='sms-select'` or `class='sms-select-dark'` to your `<select>` tag
+ 2. Run *./generate_templates.js*
+ 3. Import *sms_templates.js*
+ 4. Import *sms.js*
+ 5. Add `class='sms-select'` to your `<select>` tag
+ 
 **Done!**
 
 > Written with [StackEdit](https://stackedit.io/).
