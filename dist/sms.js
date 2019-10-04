@@ -1,41 +1,34 @@
 const sms_template_prefix = 'sms-template';
+const sms_max_rows = 5;
 
-function sort_ul(ul) {
-    let items = ul.children();
-    items.sort(function (a, b) {
-        let keyA = $(a).text();
-        let keyB = $(b).text();
-
-        if (keyA < keyB) return -1;
-        if (keyA > keyB) return 1;
-        return 0;
-    });
-    $.each(items, function (i, li) {
-        ul.append(li); /* This removes li from the old spot and moves it */
-    });
+function generate_option(template, real_option) {
+    let option = template.clone();
+    option.removeClass('sms-default-option');
+    option.text(real_option.text());
+    option.attr('value', real_option.attr('value'));
+    option.show();
+    return option;
 }
 
 function generate_options(sms, sms_select) {
     let not_chosen_list = sms.find('.sms-not-chosen-list');
     let chosen_list = sms.find('.sms-chosen-list');
-    let not_chosen_option = not_chosen_list.children('li');
-    let chosen_option = chosen_list.children('li');
+    let not_chosen_option_template = not_chosen_list.children('li');
+    let chosen_option_template = chosen_list.children('li');
 
     sms_select.children('option').each(function () {
-        let new_option = '';
+        let new_chosen_option = generate_option(chosen_option_template, $(this));
+        let new_not_chosen_option = generate_option(not_chosen_option_template, $(this));
+        new_chosen_option.appendTo(chosen_list);
+        new_not_chosen_option.appendTo(not_chosen_list);
 
         if ($(this).is(':selected')) {
-            new_option = chosen_option.clone();
-            new_option.appendTo(chosen_list);
+            new_not_chosen_option.hide();
+            new_chosen_option.addClass('sms-visible-option');
         } else {
-            new_option = not_chosen_option.clone();
-            new_option.appendTo(not_chosen_list);
+            new_chosen_option.hide();
+            new_not_chosen_option.addClass('sms-visible-option');
         }
-
-        new_option.removeClass('sms-default-option');
-        new_option.text($(this).text());
-        new_option.attr('value', $(this).attr('value'));
-        new_option.show();
     });
 }
 
@@ -67,6 +60,13 @@ function get_template_types(templates) {
 function generate_all_sms(templates_str) {
     const templates = $('<output>').append($.parseHTML(templates_str));
 
+    // set max-height if provided
+    if (typeof sms_max_rows !== 'undefined') {
+        templates.find('.sms-chosen-list, .sms-not-chosen-list').each(function () {
+            $(this).css('max-height', (sms_max_rows*3+0.3).toString().concat('em'));
+        });
+    }
+
     const template_types = get_template_types(templates.children());
 
     let selects = $('.sms-select');
@@ -90,32 +90,37 @@ function generate_all_sms(templates_str) {
 
 }
 
-function choose_option(option) {
+function toggle_option(option) {
+
     let sms = option.closest('.sms-searchable-multiselect');
     let chosen_list = sms.find('.sms-chosen-list');
-    let select = sms.find('.sms-select');
-
-    //add chosen option to select value
-    let chosen_array = select.val();
-    chosen_array.push(option.val());
-    select.val(chosen_array);
-
-    option.appendTo(chosen_list);
-    sort_ul(chosen_list);
-}
-
-function discard_option(option) {
-    let sms = option.closest('.sms-searchable-multiselect');
     let not_chosen_list = sms.find('.sms-not-chosen-list');
     let select = sms.find('.sms-select');
+    let option_val = option.val();
 
-    //remove chosen option from select value
+    //get array of values chosen in real select
     let chosen_array = select.val();
-    chosen_array.splice(chosen_array.indexOf(option.val()), 1);
-    select.val(chosen_array);
 
-    option.appendTo(not_chosen_list);
-    sort_ul(not_chosen_list);
+    if (option.parent().hasClass('sms-not-chosen-list')) {
+
+        chosen_array.push(option_val);
+        chosen_list.find(`[value='${option_val}']`).show();
+        chosen_list.find(`[value='${option_val}']`).addClass('sms-visible-option');
+
+    } else if (option.parent().hasClass('sms-chosen-list')) {
+
+        //remove chosen option from select value
+        chosen_array.splice(chosen_array.indexOf(option.val()), 1);
+        not_chosen_list.find(`[value='${option_val}']`).show();
+        not_chosen_list.find(`[value='${option_val}']`).addClass('sms-visible-option');
+
+    }
+
+    option.hide();
+    option.removeClass('sms-visible-option');
+
+    //save values to real select
+    select.val(chosen_array);
 }
 
 function filter_option(searched_text, option) {
@@ -129,24 +134,24 @@ function filter_option(searched_text, option) {
 }
 
 function filter_options(searched_text, sms) {
-    let chosen_list = sms.find('.sms-chosen-list');
-    let not_chosen_list = sms.find('.sms-not-chosen-list');
+    let chosen_visible_options = sms.find('.sms-chosen-list > .sms-visible-option');
+    let not_chosen_visible_options = sms.find('.sms-not-chosen-list > .sms-visible-option');
 
-    chosen_list.children().each(function () {
+    chosen_visible_options.each(function () {
         filter_option(searched_text, $(this))
     });
-    not_chosen_list.children().each(function () {
+    not_chosen_visible_options.each(function () {
         filter_option(searched_text, $(this))
     });
 }
 
 function connect_events() {
     $('.sms-not-chosen-list').on('click', 'li', function () {
-        choose_option($(this));
+        toggle_option($(this));
     });
 
     $('.sms-chosen-list').on('click', 'li', function () {
-        discard_option($(this));
+        toggle_option($(this));
     });
 
     $(".sms-search-bar").on("change paste keyup", function () {
