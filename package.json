@@ -24,5 +24,8 @@
     "bugs": {
         "url": "https://github.com/gr8prnm8/bs-searchable-multiselect/issues"
     },
-    "homepage": "https://github.com/gr8prnm8/bs-searchable-multiselect"
+    "homepage": "https://github.com/gr8prnm8/bs-searchable-multiselect",
+    "bin": {
+        "sms-generate-templates": "dist/sms_templates.js"
+    }
 }
