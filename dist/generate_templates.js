@@ -45,8 +45,8 @@ function generate_sms_templates(fs, file_promises, templates_str_name) {
             templates = templates.concat(files_content[1]);
         }
 
-        templates = templates.replace(/\r?\n|\r/g, '');  //remove new lines
-        templates = templates.replace(/ {4,}|\t/g, ''); //remove tabulation
+        templates = templates.replace(/\r?\n|\r/g, ' ');  //remove new lines
+        templates = templates.replace(/ {4,}|\t/g, ' '); //remove tabulation
 
         let new_file_content = `const ${templates_str_name} = '${templates}';`;
 
