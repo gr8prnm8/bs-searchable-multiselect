@@ -1,5 +1,4 @@
 const sms_template_prefix = 'sms-template';
-const sms_max_rows = 5;
 
 function generate_option(template, real_option) {
     let option = template.clone();

@@ -14,6 +14,7 @@
 
  You can also add *sms-template-dark* to classes of your select, if you prefer darker colors.
 
+
 ## Using custom templates
 If you want to further customize your select, there are a few simple steps that you have to perform:
 
@@ -28,5 +29,11 @@ And that's all. *./generate_templates.js* updated *sms_templates.js* file, addin
 
 **NOTE**: 
 If you want to add more than one template, just put them all in one file, one after another.
-  
+
+
+## Constants
+For now there is only one constant that you should be aware of - **sms_max_rows**. When this is set, there will be only that much visible rows. Rest of them will be wrapped with scrollable area.
+
+Remember that this will work correctly only for templates that make use of bootstrap lists, or ones that have row height similar to them.
+
 > Written with [StackEdit](https://stackedit.io/).
