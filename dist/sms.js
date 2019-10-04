@@ -120,6 +120,8 @@ function toggle_option(option) {
 
     //save values to real select
     select.val(chosen_array);
+
+    update_counters(sms);
 }
 
 function filter_option(searched_text, option) {
@@ -146,6 +148,26 @@ function filter_options(searched_text, sms) {
             filter_option(searched_text, $(this));
         });
     }
+
+    update_counters(sms);
+}
+
+function update_counters(sms){
+
+    // if filtering of chosen options is turned off, hide counter.
+    if(sms.find('.sms-select').hasClass('sms-do-not-filter-chosen')){
+        sms.find('.sms-chosen-counter').hide();
+    }
+
+    const not_chosen_total_number = sms.find('.sms-not-chosen-list').children('.sms-visible-option').length;
+    const chosen_total_number = sms.find('.sms-chosen-list').children('.sms-visible-option').length;
+    const not_chosen_visible_number = sms.find('.sms-not-chosen-list').children(':visible').length;
+    const chosen_visible_number = sms.find('.sms-chosen-list').children(':visible').length;
+
+    sms.find('.sms-visible-not-chosen-number').html(not_chosen_visible_number);
+    sms.find('.sms-visible-chosen-number').html(chosen_visible_number);
+    sms.find('.sms-total-not-chosen-number').html(not_chosen_total_number);
+    sms.find('.sms-total-chosen-number').html(chosen_total_number);
 }
 
 function connect_events() {
@@ -170,6 +192,13 @@ $(document).ready(function () {
             'For more information check: https://github.com/gr8prnm8/bs-searchable-multiselect');
     } else {
         generate_all_sms(templates_str);
+
+        $('.sms-searchable-multiselect').each(
+            function () {
+                update_counters($(this));
+            }
+        );
+
         connect_events();
     }
 });
