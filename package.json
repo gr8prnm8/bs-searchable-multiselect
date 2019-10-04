@@ -1,6 +1,6 @@
 {
     "name": "@rudein/bs-searchable-multiselect",
-    "version": "2.2.2",
+    "version": "2.2.3",
     "description": "Responsive multiselect with search bar built upon bootstrap",
     "license": "MIT",
     "repository": {
