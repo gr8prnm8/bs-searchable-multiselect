@@ -62,7 +62,7 @@ function generate_all_sms(templates_str) {
     // set max-height if provided
     if (typeof sms_max_rows !== 'undefined') {
         templates.find('.sms-chosen-list, .sms-not-chosen-list').each(function () {
-            $(this).css('max-height', (sms_max_rows*3+0.3).toString().concat('em'));
+            $(this).css('max-height', (sms_max_rows * 3 + 0.3).toString().concat('em'));
         });
     }
 
@@ -135,13 +135,17 @@ function filter_option(searched_text, option) {
 function filter_options(searched_text, sms) {
     let chosen_visible_options = sms.find('.sms-chosen-list > .sms-visible-option');
     let not_chosen_visible_options = sms.find('.sms-not-chosen-list > .sms-visible-option');
+    let filter_chosen_options = !sms.find('.sms-select').hasClass('sms-do-not-filter-chosen');
 
-    chosen_visible_options.each(function () {
-        filter_option(searched_text, $(this))
-    });
     not_chosen_visible_options.each(function () {
-        filter_option(searched_text, $(this))
+        filter_option(searched_text, $(this));
     });
+
+    if (filter_chosen_options) {
+        chosen_visible_options.each(function () {
+            filter_option(searched_text, $(this));
+        });
+    }
 }
 
 function connect_events() {

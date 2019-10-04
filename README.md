@@ -36,4 +36,8 @@ For now there is only one constant that you should be aware of - **sms_max_rows*
 
 Remember that this will work correctly only for templates that make use of bootstrap lists, or ones that have row height similar to them.
 
+
+## Other mildly important things
+You can also decide if you do not want to filter selected options. To do so, just add *sms-do-not-filter-chosen* class to your select.
+
 > Written with [StackEdit](https://stackedit.io/).
