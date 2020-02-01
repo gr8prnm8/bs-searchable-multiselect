@@ -5,7 +5,8 @@
 ## How to start  
   
  1. Import *bootstrap* and *jQuery*  
- 2. Run *sms-generate-templates* in directory that you want to store your templates file
+ 2. Run *sms-generate-templates* command in directory that you want to store your templates file
+ **NOTE:** for this to work you should have Node version 10.0.0 or higher 
  3. Import *sms_templates.js* which was generated in last step  
  4. Import *sms.js*  
  5. Add `class='sms-select'` to your `<select>` tag.  
